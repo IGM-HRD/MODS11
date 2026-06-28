@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+    :root{
+      --navy:#0d2150; --navy2:#16306e; --red:#c8102e; --accent:#16306e;
+      --line:#dbe1ec; --bg:#eceff4; --txt:#1d2433; --muted:#5b6678;
+      --req:#c8102e; --soft:#f4f6fa;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--txt);
+      font-family:"Pretendard","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+      line-height:1.65;-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:820px;margin:0 auto;padding:0 16px 90px;}
+
+    /* ===== 상단 정부기관 배너 ===== */
+    header.hero{margin:0 -16px 24px;background:
+      linear-gradient(180deg,var(--navy) 0%,var(--navy2) 100%);
+      color:#fff;border-bottom:4px solid var(--red);overflow:hidden;}
+    .gov-bar{background:#fff;padding:13px 24px;display:flex;align-items:center;}
+    .logo{display:flex;align-items:center;gap:11px;}
+    .logo svg{height:42px;width:42px;flex:none;}
+    .logo img{height:42px;width:auto;flex:none;}
+    .logo-txt{display:flex;flex-direction:column;line-height:1.12;}
+    .logo-txt small{font-size:12px;color:#4a4f57;font-weight:700;letter-spacing:.5px;}
+    .logo-txt strong{font-size:19px;color:var(--navy);font-weight:800;letter-spacing:-.4px;}
+    .hero-body{padding:26px 24px 28px;max-width:820px;margin:0 auto;}
+    .org-name{font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px;
+      padding-bottom:12px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.18);}
+    .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:1px;
+      color:#fff;background:rgba(255,255,255,.14);padding:5px 12px;border-radius:2px;
+      border-left:3px solid var(--red);margin-bottom:14px;}
+    header.hero h1{margin:0 0 14px;font-size:23px;font-weight:800;line-height:1.4;letter-spacing:-.3px;}
+    header.hero p{margin:5px 0;font-size:14px;color:#d7deec;}
+    .scale-legend{margin-top:16px;font-size:13px;background:rgba(255,255,255,.08);
+      padding:11px 14px;border-radius:4px;border-left:3px solid var(--red);color:#e9eef7;}
+
+    /* ===== 섹션 카드 ===== */
+    .card{background:#fff;border:1px solid var(--line);border-radius:6px;
+      padding:0 22px 20px;margin-bottom:18px;box-shadow:0 1px 3px rgba(13,33,80,.05);}
+    .card h2{font-size:16px;color:var(--navy);font-weight:800;margin:0 -22px 4px;
+      padding:16px 22px 14px;border-bottom:1px solid var(--line);
+      position:relative;letter-spacing:-.2px;}
+    .card h2::before{content:"";position:absolute;left:0;top:14px;bottom:12px;
+      width:5px;background:var(--red);}
+    .card .sub{font-size:13px;color:var(--muted);margin:14px 0 4px;
+      background:var(--soft);padding:10px 13px;border-radius:4px;}
+    .q{padding:16px 0;border-top:1px solid #eef1f6;}
+    .q:first-of-type{border-top:none;}
+    .q .label{font-size:15px;font-weight:600;margin-bottom:10px;color:#222b3b;}
+    .req{color:var(--req);margin-left:3px;font-weight:800;}
+
+    input[type=text],textarea{width:100%;border:1px solid var(--line);border-radius:4px;
+      padding:11px 13px;font-size:14px;font-family:inherit;background:#fff;transition:.12s;}
+    input[type=text]:focus,textarea:focus{outline:none;border-color:var(--navy2);
+      box-shadow:0 0 0 3px rgba(22,48,110,.1);}
+    textarea{min-height:90px;resize:vertical;}
+
+    /* ===== 평가 문항(번호배지 + 균등 버튼) ===== */
+    .qhead{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px;}
+    .qnum{flex:none;width:27px;height:27px;border-radius:7px;background:#e7edf8;
+      color:var(--navy);font-weight:800;font-size:13.5px;display:flex;
+      align-items:center;justify-content:center;margin-top:1px;}
+    .qtext{flex:1;}
+    .qcat{font-size:12.5px;font-weight:700;color:#2f55ad;margin-bottom:3px;}
+    .qhead .label{margin-bottom:0;}
+    .rate-row{display:flex;gap:8px;}
+    .rate-btn{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer;
+      transition:.12s;color:#5b6678;font-weight:700;font-size:16px;padding:16px 4px;
+      text-align:center;line-height:1.3;}
+    .rate-btn:hover{border-color:var(--navy2);background:var(--soft);}
+    .rate-btn input{display:none;}
+    .rate-btn:has(input:checked){background:var(--navy);color:#fff;border-color:var(--navy);
+      box-shadow:0 2px 6px rgba(13,33,80,.25);}
+    .rate-row.freq .rate-btn{font-size:12.5px;font-weight:600;min-height:56px;padding:8px 4px;}
+    .rate-btn.na{flex:1.35 1 0;font-size:11.5px;font-weight:600;line-height:1.25;
+      color:#8a93a3;border-style:dashed;}
+    .rate-btn.na:has(input:checked){background:#5b6678;border-color:#5b6678;
+      border-style:solid;color:#fff;box-shadow:0 2px 6px rgba(91,102,120,.25);}
+    .anchors{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted);}
+    .na-opt{display:inline-flex;align-items:center;gap:8px;margin-top:11px;font-size:13px;
+      color:#5b6678;cursor:pointer;border:1px dashed var(--line);padding:7px 14px;border-radius:6px;}
+    .na-opt:hover{border-color:var(--navy2);}
+    .na-opt input{display:none;}
+    .na-opt:has(input:checked){background:var(--navy);color:#fff;border-style:solid;
+      border-color:var(--navy);font-weight:700;}
+
+    /* ===== NPS ===== */
+    .nps{display:flex;flex-wrap:wrap;gap:6px;}
+    .nps label{width:42px;text-align:center;border:1px solid var(--line);border-radius:4px;
+      padding:9px 0;font-size:13px;cursor:pointer;transition:.12s;color:#3a4456;}
+    .nps label:hover{border-color:var(--navy2);}
+    .nps label:has(input:checked){background:var(--navy);color:#fff;border-color:var(--navy);font-weight:700;}
+    .nps input{display:none;}
+
+    /* ===== 보기/체크 ===== */
+    .opts label{display:flex;align-items:flex-start;gap:9px;padding:8px 0;font-size:14px;
+      cursor:pointer;color:#2b3445;}
+    .opts label:hover{color:var(--navy);}
+    .opts input{margin-top:4px;accent-color:var(--navy);width:16px;height:16px;}
+
+    /* ===== 그리드 표 ===== */
+    .grid-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+    .grid-table th,.grid-table td{border:1px solid var(--line);padding:9px 4px;text-align:center;}
+    .grid-table th.rowh,.grid-table td.rowh{text-align:left;font-weight:600;min-width:140px;color:#2b3445;}
+    .grid-table thead th{background:var(--navy);color:#fff;font-weight:700;}
+    .grid-table tbody tr:nth-child(even){background:var(--soft);}
+    .grid-table input{transform:scale(1.2);accent-color:var(--navy);}
+
+    /* ===== 제출 ===== */
+    .submit{position:sticky;bottom:16px;margin-top:8px;}
+    button{width:100%;background:var(--navy);color:#fff;border:none;border-radius:6px;
+      padding:17px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.5px;
+      box-shadow:0 4px 14px rgba(13,33,80,.3);transition:.15s;}
+    button:hover{background:#0a1a40;}
+    button:disabled{background:#9ca3af;cursor:not-allowed;box-shadow:none;}
+    .err{color:var(--req);font-size:13px;margin-top:8px;display:none;font-weight:600;text-align:center;}
+
+    /* ===== 완료 화면 ===== */
+    .done{text-align:center;padding:70px 20px;background:#fff;border:1px solid var(--line);
+      border-radius:6px;border-top:4px solid var(--red);margin-top:24px;}
+    .done .big{font-size:54px;}
+    .done h2{color:var(--navy);}
+
+    /* ===== 푸터 ===== */
+    .site-foot{text-align:center;color:var(--muted);font-size:12px;margin-top:28px;
+      padding-top:18px;border-top:1px solid var(--line);}
+    .site-foot strong{color:var(--navy);}
+
+    .hidden{display:none;}
+    .hint{font-size:12.5px;color:var(--muted);margin-top:5px;}
+    @media(max-width:560px){
+      header.hero h1{font-size:19px;}
+      .brand-sub{display:none;}
+      .rate-row{gap:5px;}.rate-btn{font-size:14px;padding:13px 2px;}
+      .rate-row.freq .rate-btn{font-size:10.5px;min-height:52px;padding:6px 2px;}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="formArea">
+    <header class="hero">
+      <div class="hero-body">
+        <div class="org-name">국가데이터인재개발원</div>
+        <h1>「AI 도구로 배우는 실전 데이터 분석(입문)」 현업적용도 조사</h1>
+        <p>본 설문은 2026년 5월 수료 과정 이후, 배운 내용을 실제 업무에 얼마나 적용하고 계신지 파악하기 위한 조사입니다.</p>
+        <p>응답은 교육효과 분석·과정 개선 목적으로만 활용되며 개별 응답은 공개되지 않습니다. (약 8~10분 소요)</p>
+      </div>
+    </header>
+
+    <form id="surveyForm"><!-- 동적 생성 --></form>
+
+    <div class="submit">
+      <button type="button" id="submitBtn">제출하기</button>
+      <div class="err" id="formErr">필수 문항(*)에 모두 응답해 주세요.</div>
+    </div>
+  </div>
+
+  <div id="doneArea" class="done hidden">
+    <div class="big">✅</div>
+    <h2>응답이 제출되었습니다. 감사합니다!</h2>
+    <p>소중한 의견은 향후 교육과정 개선에 활용하겠습니다.</p>
+  </div>
+
+  <div class="site-foot">
+    <strong>국가데이터인재개발원</strong> &nbsp;|&nbsp; AI 도구로 배우는 실전 데이터 분석(입문) 과정<br>
+    본 설문 응답은 교육효과 분석 및 과정 개선 목적으로만 활용됩니다.
+  </div>
+
+</div>
+
+<script>
+/* ============ 설문 구성(config) ============ */
+var SCALE = [
+  {v:'1',t:'① 전혀<br>그렇지않다'},{v:'2',t:'② 그렇지<br>않다'},
+  {v:'3',t:'③ 보통<br>이다'},{v:'4',t:'④ 그렇다'},{v:'5',t:'⑤ 매우<br>그렇다'},
+  {v:'해당없음',t:'해당<br>업무없음'}
+];
+var SCALE5 = SCALE.slice(0,5);
+
+var P1_ROWS = [
+  {k:'p1_prompt',t:'데이터 분석을 위한 AI 프롬프트 작성'},
+  {k:'p1_excel',t:'AI/Power Query 활용 엑셀 데이터 전처리·정제'},
+  {k:'p1_vba',t:'AI 활용 엑셀 VBA·매크로 반복업무 자동화'},
+  {k:'p1_viz',t:'AI 기반 데이터 시각화/인터랙티브 대시보드 제작'},
+  {k:'p1_unstructured',t:'비정형 데이터 분석(NotebookLM 등)'},
+  {k:'p1_stats',t:'AI 활용 통계 분석'},
+  {k:'p1_python',t:'AI 기반 Python 데이터 분석(Pandas 등)'},
+  {k:'p1_ml',t:'머신러닝 예측 분석(분류·회귀 등)'}
+];
+var P1_COLS = ['전혀 사용 안 함','1~2회 시도','가끔(월1~2회)','자주(주1회↑)','거의 매일'];
+
+var P2_ITEMS = [
+  {k:'p2_1', cat:'생성형 AI 활용', t:'생성형 AI를 업무 상황에 맞게 실제로 활용하고 있다.', req:true},
+  {k:'p2_2', cat:'바이브 코딩', t:'AI 에이전트 기반 코드 생성(바이브 코딩)을 업무에 적용해 보았다.'},
+  {k:'p2_3', cat:'보안환경 AI 활용', t:'폐쇄망·보안 환경에 맞는 AI 활용 방법을 업무에 적용하고 있다.'},
+  {k:'p2_4', cat:'머신러닝 활용', t:'머신러닝 개념을 활용해 업무 데이터를 예측·분석해 보았다.'},
+  {k:'p2_5', cat:'AI 업무 수행', t:'AI 도구를 활용하여 실제 업무를 수행하고 있다.', req:true},
+  {k:'p2_6', cat:'프롬프트 작성', t:'데이터 분석을 위한 AI 프롬프트를 작성해 업무에 활용하고 있다.'},
+  {k:'p2_7', cat:'데이터 전처리', t:'AI를 활용하여 실제 업무 데이터의 전처리를 수행하고 있다.'},
+  {k:'p2_8', cat:'통계 분석', t:'AI를 활용하여 업무 데이터의 통계 분석을 수행하고 있다.'},
+  {k:'p2_9', cat:'엑셀 VBA 자동화', t:'AI를 활용하여 엑셀 VBA 코드를 생성해 반복업무를 자동화하고 있다.'},
+  {k:'p2_10',cat:'데이터 시각화', t:'AI 도구를 활용한 데이터 시각화 기법을 업무에 적용하고 있다.'},
+  {k:'p2_11',cat:'데이터 대시보드', t:'AI 도구를 활용하여 업무용 데이터 대시보드를 설계·구축해 보았다.'},
+  {k:'p2_12',cat:'AI 효능감', t:'AI를 활용하여 업무를 수행할 수 있다는 자신감을 갖고 실제로 시도하고 있다.', req:true}
+];
+
+var Q20_OPTS = ['담당 업무와 연계가 어려움','업무가 바빠 적용할 시간 부족','폐쇄망·보안 등 환경적 제약',
+  '분석에 필요한 데이터 접근·확보의 어려움','추가 학습·숙련이 더 필요함','부서 내 활용 분위기·지원 부족','적용에 어려움 없음'];
+var Q21_OPTS = ['심화·후속 교육 과정','실습·테스트 가능한 분석 환경(도구·데이터)','AI 도구의 정식 도입·라이선스',
+  '적용 과정에서의 멘토링·헬프데스크','부서 차원의 데이터 분석 과제 부여','우수사례 공유·확산'];
+
+/* ============ 렌더링 ============ */
+function esc(s){return s;}
+function ratingQ(item){
+  // item:{k,t,req,na,num,cat}
+  var html = '<div class="q" data-key="'+item.k+'" data-req="'+(item.req?1:0)+'">';
+  html += '<div class="qhead">';
+  if(item.num) html += '<span class="qnum">'+item.num+'</span>';
+  html += '<div class="qtext">';
+  if(item.cat) html += '<div class="qcat">'+item.cat+'</div>';
+  html += '<div class="label">'+item.t+(item.req?'<span class="req">*</span>':'')+'</div>';
+  html += '</div></div>';
+  html += '<div class="rate-row">';
+  for(var i=1;i<=5;i++){
+    html += '<label class="rate-btn"><input type="radio" name="'+item.k+'" value="'+i+'"><span>'+i+'</span></label>';
+  }
+  if(item.na){
+    html += '<label class="rate-btn na"><input type="radio" name="'+item.k+'" value="해당없음"><span>해당 업무<br>없음</span></label>';
+  }
+  html += '</div>';
+  html += '<div class="anchors"><span>① 전혀 그렇지 않다</span><span>매우 그렇다 ⑤</span></div>';
+  html += '</div>';
+  return html;
+}
+function freqQ(item){
+  // item:{k,t,num}
+  var html = '<div class="q" data-key="'+item.k+'" data-req="0">';
+  html += '<div class="qhead"><span class="qnum">'+item.num+'</span><div class="qtext"><div class="label">'+item.t+'</div></div></div>';
+  html += '<div class="rate-row freq">';
+  P1_COLS.forEach(function(c){
+    html += '<label class="rate-btn"><input type="radio" name="'+item.k+'" value="'+c+'"><span>'+c+'</span></label>';
+  });
+  html += '</div></div>';
+  return html;
+}
+function textQ(k,label,req,long,hint){
+  var h='<div class="q" data-key="'+k+'" data-req="'+(req?1:0)+'">';
+  h+='<div class="label">'+label+(req?'<span class="req">*</span>':'')+'</div>';
+  h+= long?'<textarea name="'+k+'"></textarea>':'<input type="text" name="'+k+'">';
+  if(hint) h+='<div class="hint">'+hint+'</div>';
+  h+='</div>';return h;
+}
+function radioOptsQ(k,label,opts,req){
+  var h='<div class="q" data-key="'+k+'" data-req="'+(req?1:0)+'"><div class="label">'+label+(req?'<span class="req">*</span>':'')+'</div><div class="opts">';
+  opts.forEach(function(o){h+='<label><input type="radio" name="'+k+'" value="'+o+'"><span>'+o+'</span></label>';});
+  h+='</div></div>';return h;
+}
+function checkOptsQ(k,label,opts){
+  var h='<div class="q" data-key="'+k+'" data-multi="1"><div class="label">'+label+'</div><div class="opts">';
+  opts.forEach(function(o){h+='<label><input type="checkbox" name="'+k+'" value="'+o+'"><span>'+o+'</span></label>';});
+  h+='<label><input type="checkbox" name="'+k+'_etc_chk"><span>기타</span></label>';
+  h+='<input type="text" name="'+k+'_etc" placeholder="기타 의견 직접 입력" style="margin-top:6px">';
+  h+='</div></div>';return h;
+}
+
+function card(title,sub,inner){
+  return '<div class="card"><h2>'+title+'</h2>'+(sub?'<p class="sub">'+sub+'</p>':'')+inner+'</div>';
+}
+
+function buildForm(){
+  var f = document.getElementById('surveyForm');
+  var html = '';
+
+  // 응답자 정보
+  html += card('응답자 정보','',
+    textQ('dept','소속 부서',true,false));
+
+  // Part 1
+  var p1='';P1_ROWS.forEach(function(r,i){p1+=freqQ({k:r.k,t:r.t,num:i+1});});
+  html += card('Part 1. 도구·스킬 활용 현황','교육 후 실제 업무에서 아래 스킬을 어느 정도 사용하셨나요?',p1);
+
+  // Part 2
+  var p2='';P2_ITEMS.forEach(function(it,i){p2+=ratingQ({k:it.k,t:it.t,req:it.req,cat:it.cat,num:i+1,na:true});});
+  html += card('Part 2. 현업 적용 수준','지난 3개월 실제 업무 기준. 해당 업무가 없으면 "해당 업무 없음"을 선택하세요.',p2);
+
+  // Part 3
+  var p3 = radioOptsQ('q13','13. 교육에서 배운 AI 도구 활용으로 관련 업무 처리 시간이 얼마나 단축되었습니까?',
+    ['거의 변화 없음','약 10% 미만','10~30%','30~50%','50% 이상'],true);
+  p3 += ratingQ({k:'q14',t:'14. AI 도구 활용으로 업무 산출물의 품질·정확도가 향상되었다.'});
+  p3 += ratingQ({k:'q15',t:'15. AI 도구 활용이 데이터 기반 의사결정에 기여하였다.'});
+  p3 += ratingQ({k:'q16',t:'16. 교육에서 배운 내용을 동료·부서에 공유하거나 확산하였다.'});
+  html += card('Part 3. 적용 성과·효과','',p3);
+
+  // Part 4
+  var p4 = textQ('q17','17. 교육 내용을 업무에 적용해 가장 효과를 본 사례를 구체적으로 적어 주세요.',true,true,
+    '어떤 업무에 / 어떤 도구·기능을 / 어떤 결과가 있었는지');
+  p4 += textQ('q18','18. 위 사례 관련 산출물(대시보드, 자동화 파일 등)이 있다면 간단히 설명해 주세요. (선택)',false,true);
+  html += card('Part 4. 우수 적용 사례','',p4);
+
+  f.innerHTML = html;
+}
+
+/* ============ 수집 & 검증 ============ */
+function collect(){
+  var data = {};
+  // 단일 라디오/텍스트
+  var singles = ['dept','p1_prompt','p1_excel','p1_vba','p1_viz','p1_unstructured','p1_stats','p1_python','p1_ml',
+    'p2_1','p2_2','p2_3','p2_4','p2_5','p2_6','p2_7','p2_8','p2_9','p2_10','p2_11','p2_12',
+    'q13','q14','q15','q16','q17','q18'];
+  singles.forEach(function(k){
+    var el = document.querySelector('[name="'+k+'"]:checked') || document.querySelector('input[name="'+k+'"][type=text], textarea[name="'+k+'"]');
+    if(el && el.type==='radio'){ var c=document.querySelector('[name="'+k+'"]:checked'); data[k]=c?c.value:''; }
+    else { data[k]= el? el.value.trim():''; }
+  });
+  // 라디오 재확인(텍스트가 아닌 경우)
+  ['p1_prompt','p1_excel','p1_vba','p1_viz','p1_unstructured','p1_stats','p1_python','p1_ml',
+   'p2_1','p2_2','p2_3','p2_4','p2_5','p2_6','p2_7','p2_8','p2_9','p2_10','p2_11','p2_12',
+   'q13','q14','q15','q16'].forEach(function(k){
+    var c=document.querySelector('[name="'+k+'"]:checked'); data[k]=c?c.value:'';
+  });
+  return data;
+}
+
+function validate(data){
+  var required = ['dept','p2_1','p2_5','p2_12','q13','q17'];
+  for(var i=0;i<required.length;i++){
+    if(!data[required[i]]){ return required[i]; }
+  }
+  return null;
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  buildForm();
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var data = collect();
+    var miss = validate(data);
+    var errEl = document.getElementById('formErr');
+    if(miss){
+      errEl.style.display='block';
+      var node = document.querySelector('[data-key="'+miss+'"]') || document.querySelector('[name="'+miss+'"]');
+      if(node) node.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    errEl.style.display='none';
+    var btn=this; btn.disabled=true; btn.textContent='제출 중...';
+
+    if (typeof google !== 'undefined' && google.script && google.script.run){
+      google.script.run
+        .withSuccessHandler(function(res){ showDone(); })
+        .withFailureHandler(function(err){ btn.disabled=false; btn.textContent='제출하기'; alert('제출 중 오류가 발생했습니다. 다시 시도해 주세요.\n'+err.message); })
+        .saveResponse(data);
+    } else {
+      // 로컬 미리보기(브라우저에서 파일 직접 열었을 때)
+      console.log('수집 데이터:', data); showDone();
+    }
+  });
+});
+
+function showDone(){
+  document.getElementById('formArea').classList.add('hidden');
+  document.getElementById('doneArea').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
