@@ -177,6 +177,13 @@
 </div>
 
 <script>
+/* ============ ★★★ 필수 설정 ★★★ ============
+   GitHub Pages 등 외부에 올려 사용할 때, 아래 따옴표 안에
+   배포한 Apps Script 웹앱 URL을 붙여넣으세요.
+   (Apps Script > 배포 > 새 배포 > 웹앱 > '액세스: 모든 사용자' 로 배포한 URL)
+   예: var WEBAPP_URL = 'https://script.google.com/macros/s/AKfyc.../exec';   */
+var WEBAPP_URL = 'https://script.google.com/macros/s/AKfycby2nmEcuOTf44tzs-5zCliHTizMKw2YR4wMa2CJ9qXHvMHQcx_dED77yKxX9BrN5mS1/exec';
+
 /* ============ 설문 구성(config) ============ */
 var SCALE = [
   {v:'1',t:'① 전혀<br>그렇지않다'},{v:'2',t:'② 그렇지<br>않다'},
@@ -353,13 +360,26 @@ document.addEventListener('DOMContentLoaded', function(){
     var btn=this; btn.disabled=true; btn.textContent='제출 중...';
 
     if (typeof google !== 'undefined' && google.script && google.script.run){
+      // (1) Apps Script가 직접 서빙하는 경우
       google.script.run
         .withSuccessHandler(function(res){ showDone(); })
         .withFailureHandler(function(err){ btn.disabled=false; btn.textContent='제출하기'; alert('제출 중 오류가 발생했습니다. 다시 시도해 주세요.\n'+err.message); })
         .saveResponse(data);
+    } else if (WEBAPP_URL){
+      // (2) GitHub Pages 등 외부 호스팅 → 웹앱으로 POST 전송
+      fetch(WEBAPP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      })
+      .then(function(){ showDone(); })
+      .catch(function(err){ btn.disabled=false; btn.textContent='제출하기'; alert('제출 중 오류가 발생했습니다. 네트워크를 확인 후 다시 시도해 주세요.'); });
     } else {
-      // 로컬 미리보기(브라우저에서 파일 직접 열었을 때)
-      console.log('수집 데이터:', data); showDone();
+      // (3) 설정 전: 로컬 미리보기(디자인 확인용, 저장 안 됨)
+      console.log('수집 데이터:', data);
+      alert('아직 저장 서버(WEBAPP_URL)가 설정되지 않았습니다. index.html 상단의 WEBAPP_URL에 Apps Script 웹앱 URL을 입력하세요.');
+      btn.disabled=false; btn.textContent='제출하기';
     }
   });
 });
