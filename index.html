@@ -103,6 +103,7 @@
       cursor:pointer;color:#2b3445;}
     .opts label:hover{color:var(--navy);}
     .opts input{margin-top:4px;accent-color:var(--navy);width:16px;height:16px;}
+    .opts input[type=text]{width:100%;height:auto;padding:11px 13px;accent-color:auto;}
 
     /* ===== 그리드 표 ===== */
     .grid-table{width:100%;border-collapse:collapse;font-size:12.5px;}
@@ -288,7 +289,7 @@ function buildForm(){
 
   // 응답자 정보
   html += card('응답자 정보','',
-    textQ('dept','소속 부서',true,false));
+    textQ('name','성함',true,false) + textQ('dept','소속 부서',true,false));
 
   // Part 1
   var p1='';P1_ROWS.forEach(function(r,i){p1+=freqQ({k:r.k,t:r.t,num:i+1});});
@@ -307,7 +308,7 @@ function buildForm(){
   html += card('Part 3. 적용 성과·효과','',p3);
 
   // Part 4
-  var p4 = textQ('q17','17. 교육 내용을 업무에 적용해 가장 효과를 본 사례를 구체적으로 적어 주세요.',true,true,
+  var p4 = textQ('q17','17. 교육 내용을 업무에 적용해 가장 효과를 본 사례를 구체적으로 적어 주세요. (선택)',false,true,
     '어떤 업무에 / 어떤 도구·기능을 / 어떤 결과가 있었는지');
   p4 += textQ('q18','18. 위 사례 관련 산출물(대시보드, 자동화 파일 등)이 있다면 간단히 설명해 주세요. (선택)',false,true);
   html += card('Part 4. 우수 적용 사례','',p4);
@@ -319,7 +320,7 @@ function buildForm(){
 function collect(){
   var data = {};
   // 단일 라디오/텍스트
-  var singles = ['dept','p1_prompt','p1_excel','p1_vba','p1_viz','p1_unstructured','p1_stats','p1_python','p1_ml',
+  var singles = ['name','dept','p1_prompt','p1_excel','p1_vba','p1_viz','p1_unstructured','p1_stats','p1_python','p1_ml',
     'p2_1','p2_2','p2_3','p2_4','p2_5','p2_6','p2_7','p2_8','p2_9','p2_10','p2_11','p2_12',
     'q13','q14','q15','q16','q17','q18'];
   singles.forEach(function(k){
@@ -337,7 +338,7 @@ function collect(){
 }
 
 function validate(data){
-  var required = ['dept','p2_1','p2_5','p2_12','q13','q17'];
+  var required = ['name','dept','p2_1','p2_5','p2_12','q13'];
   for(var i=0;i<required.length;i++){
     if(!data[required[i]]){ return required[i]; }
   }
